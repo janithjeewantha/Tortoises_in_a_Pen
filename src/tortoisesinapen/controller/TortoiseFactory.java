@@ -17,10 +17,15 @@ public class TortoiseFactory {
 
     private Random random = new Random();
     private int tortoiseSize = Utils.getInstance().getTortoiseSize();
-    private URL tortoiseResource;
+    private URL[] tortoiseResource = new URL[4];
+    private String UrlBase = "/tortoisesinapen/view/img/";
+    private String[] imgNames = {"tortoise-up.png", "tortoise-right.png",
+        "tortoise-down.png", "tortoise-left.png"};
 
     public TortoiseFactory() {
-        tortoiseResource = getClass().getResource("/tortoisesinapen/view/img/tortoise.png");        
+        for (int i = 0; i < tortoiseResource.length; i++) {
+            tortoiseResource[i] = getClass().getResource(UrlBase + imgNames[i]);            
+        }
     }
 
     public Tortoise getTortoise() throws IOException{
@@ -49,7 +54,8 @@ public class TortoiseFactory {
         int speed = Utils.getInstance().getRandomSpeed();
         tortoise.setSpeed(speed);
         tortoise.setSize(tortoiseSize, tortoiseSize);
-        tortoise.setImage(getImage());
+        tortoise.setImages(getImages());
+        tortoise.rotate();
         return tortoise;
     }
 
@@ -58,15 +64,28 @@ public class TortoiseFactory {
         int y = random.nextInt(Utils.getInstance().getMovableY());
         return new Point(x, y);
     }
-
-    private BufferedImage getImage() throws IOException{
-        BufferedImage tortoiseImage = null;
+//
+//    private BufferedImage getImage() throws IOException{
+//        BufferedImage tortoiseImage = null;
+//        try {
+//            tortoiseImage = ImageIO.read(new File(tortoiseResource.getFile()));
+//        } catch (IOException ex) {
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+//            throw ex;
+//        }
+//        return tortoiseImage;
+//    }
+//    
+    private BufferedImage[] getImages() throws IOException{
+        BufferedImage[] tortoiseImages = new BufferedImage[4];
         try {
-            tortoiseImage = ImageIO.read(new File(tortoiseResource.getFile()));
+            for (int i = 0; i < tortoiseImages.length; i++) {
+                tortoiseImages[i] = ImageIO.read(new File(tortoiseResource[i].getFile()));
+            }            
         } catch (IOException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
-        return tortoiseImage;
+        return tortoiseImages;
     }
 }

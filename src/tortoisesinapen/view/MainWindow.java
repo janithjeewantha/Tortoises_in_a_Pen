@@ -33,8 +33,8 @@ public class MainWindow extends JFrame{
 
     private int getNumOfTortoises() {
         String input = JOptionPane.showInputDialog(this,
-                "Enter the number of Tortoises:\nMaximum is 20",
-                "", JOptionPane.QUESTION_MESSAGE);
+                "Enter a number between 1 and 20",
+                "Enter the number of Tortoises", JOptionPane.QUESTION_MESSAGE);
         int number = 1;
         try{
             number = Integer.parseInt(input);

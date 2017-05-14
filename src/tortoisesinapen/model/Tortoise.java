@@ -15,6 +15,7 @@ public class Tortoise {
     private int speed = 1;
     private int direction = Utils.UP;
     private Image image;
+    private Image[] images;
     private Random random = new Random();
     private int directionChangeTimeout;
     private int speedChangeTimeout;
@@ -66,8 +67,26 @@ public class Tortoise {
                 break;
         }
         direction = rand;
+        rotate();
     }
 
+    public void rotate() {
+        switch (direction) {
+            case Utils.UP:
+                this.image = this.images[Utils.UP];
+                break;
+            case Utils.DOWN:
+                this.image = this.images[Utils.DOWN];
+                break;
+            case Utils.RIGHT:
+                this.image = this.images[Utils.RIGHT];
+                break;
+            case Utils.LEFT:
+                this.image = this.images[Utils.LEFT];
+                break;
+        }
+    }
+    
     public Point getNextPosition() {
         return new Point(getNextXStep(), getNextYStep());
     }
@@ -158,6 +177,14 @@ public class Tortoise {
         this.image = image;
     }
 
+    public Image[] getImages() {
+        return images;
+    }
+
+    public void setImages(Image[] images) {
+        this.images = images;
+    }
+    
     public int getDirectionChangeTimeout() {
         return directionChangeTimeout;
     }
