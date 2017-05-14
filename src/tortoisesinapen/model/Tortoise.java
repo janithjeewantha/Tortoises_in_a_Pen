@@ -1,14 +1,13 @@
 package tortoisesinapen.model;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.util.Random;
 import tortoisesinapen.controller.Utils;
 
 public class Tortoise {
-    
+
     private int x;
     private int y;
     private int width;
@@ -17,9 +16,16 @@ public class Tortoise {
     private int direction = Utils.UP;
     private Image image;
     private Random random = new Random();
-    
-    public void stepForward(){
-        switch (direction){
+    private int directionChangeTimeout;
+    private int speedChangeTimeout;
+
+    public Tortoise() {
+        directionChangeTimeout = Utils.getInstance().getRandomDirectionTimeout();
+        speedChangeTimeout = Utils.getInstance().getRandomSpeedTimeout();
+    }
+
+    public void stepForward() {
+        switch (direction) {
             case Utils.UP:
                 this.y -= speed;
                 break;
@@ -32,94 +38,86 @@ public class Tortoise {
             case Utils.LEFT:
                 this.x -= speed;
                 break;
-        }        
-        
-        if(this.x < 0){
-            this.x = 0;
-        }else if(this.x > (Utils.getInstance().getCanvasWidth() - this.width)){
-            this.x = Utils.getInstance().getCanvasWidth() - this.width;
         }
-        
-        if(this.y < 0){
-            this.y = 0;
-        }else if(this.y > (Utils.getInstance().getCanvasHeight() - this.height)){
-            this.y = Utils.getInstance().getCanvasHeight()- this.height;
-        }
-                
     }
-    
-    public void changeDirection(){
-        int newDirection = direction;
-        int temp = random.nextInt(2);
-        
-        double angle;
-        double locationX = image.getHeight(null)/2;
-        double locationY = image.getWidth(null)/2;
-        
-        if(temp%2 == 0){
-            newDirection++;
-            angle = Math.PI/2;
-        }else{
-            newDirection--;
-            angle = (Math.PI/2)*3;
+
+    public void changeDirection() {
+        int rand = random.nextInt(4);
+        switch (direction) {
+            case Utils.UP:
+                if(rand == Utils.UP){
+                    rand = Utils.DOWN;
+                }
+                break;
+            case Utils.DOWN:
+                if(rand == Utils.DOWN){
+                    rand = Utils.UP;
+                }
+                break;
+            case Utils.RIGHT:
+                if(rand == Utils.RIGHT){
+                    rand = Utils.LEFT;
+                }
+                break;
+            case Utils.LEFT:
+                if(rand == Utils.LEFT){
+                    rand = Utils.RIGHT;
+                }
+                break;
         }
-        newDirection = (newDirection < Utils.UP) ? Utils.LEFT : newDirection;
-        newDirection = (newDirection > Utils.LEFT) ? newDirection : Utils.UP;
-        AffineTransform transform = AffineTransform.getRotateInstance(angle, locationX, locationY);
-        ((Graphics2D) image.getGraphics()).setTransform(transform);
+        direction = rand;
     }
-    
-    public int getNextXStep(){        
+
+    public Point getNextPosition() {
+        return new Point(getNextXStep(), getNextYStep());
+    }
+
+    public int getNextXStep() {
         int nextX = this.x;
-        
-        switch (direction){
+
+        switch (direction) {
             case Utils.LEFT:
                 nextX -= speed;
                 break;
             case Utils.RIGHT:
                 nextX += speed;
-                break;            
-        }        
-        
-        if(nextX < 0){
-            nextX = 0;
-        }else if(nextX > Utils.getInstance().getMovableX()){
-            nextX = Utils.getInstance().getMovableX();
+                break;
         }
-        
+
         return nextX;
     }
-    
-    public int getNextYStep(){        
+
+    public int getNextYStep() {
         int nextY = this.y;
-        
-        switch (direction){
+
+        switch (direction) {
             case Utils.UP:
                 nextY -= speed;
                 break;
             case Utils.DOWN:
                 nextY += speed;
-                break;            
-        }        
-        
-        if(nextY < 0){
-            nextY = 0;
-        }else if(nextY > Utils.getInstance().getMovableY()){
-            nextY = Utils.getInstance().getMovableY();
+                break;
         }
-        
+
         return nextY;
-    } 
-    
-    public Rectangle getRectangle(){
+    }
+
+    public Rectangle getRectangle() {
         return new Rectangle(x, y, width, height);
     }
-    
-    public void setSize(int width, int height){
+
+    public Rectangle getNextPositionRectangle() {
+        Point nextPosition = getNextPosition();
+        Rectangle rect = new Rectangle(nextPosition);
+        rect.setSize(width, height);
+        return rect;
+    }
+
+    public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
     }
-    
+
     public int getX() {
         return x;
     }
@@ -159,5 +157,33 @@ public class Tortoise {
     public void setImage(Image image) {
         this.image = image;
     }
+
+    public int getDirectionChangeTimeout() {
+        return directionChangeTimeout;
+    }
+
+    public int getSpeedChangeTimeout() {
+        return speedChangeTimeout;
+    }
+
+    public void resetDirectionChangeTimeout() {
+        this.directionChangeTimeout = Utils.getInstance().getRandomDirectionTimeout();
+    }
+
+    public void resetSpeedChangeTimeout() {
+        this.speedChangeTimeout = Utils.getInstance().getRandomSpeedTimeout();
+    }
     
+    public void decreaseDirectionChangeTimeout() {
+        this.directionChangeTimeout--;
+    }
+
+    public void decreaseSpeedChangeTimeout() {
+        this.speedChangeTimeout--;
+    }
+
+    public void changeSpeed() {
+        this.speed = Utils.getInstance().getRandomSpeed();
+    }
+
 }

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import tortoisesinapen.controller.TortoiseController;
 import tortoisesinapen.controller.TortoiseFactory;
 import tortoisesinapen.controller.Utils;
 import tortoisesinapen.model.Tortoise;
@@ -21,7 +22,7 @@ public class Canvas extends JPanel implements ActionListener{
 
     private Image backgroundImage;
     private Timer timer;
-    private final int DELAY = 50;
+    private final int DELAY = 40;
     private int numTortoises;
 
     Canvas(int numTortoises) {
@@ -71,9 +72,7 @@ public class Canvas extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for(Tortoise t : Utils.getInstance().getTortoiseList()){
-            t.stepForward();
-        }
+        TortoiseController.move();
         repaint();
     }
     

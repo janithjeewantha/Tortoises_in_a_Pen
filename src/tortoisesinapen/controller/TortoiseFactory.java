@@ -46,7 +46,7 @@ public class TortoiseFactory {
             break mainLoop;
         }
         tortoise.setDirection(random.nextInt(4));
-        int speed = random.nextInt(4) + 1;
+        int speed = Utils.getInstance().getRandomSpeed();
         tortoise.setSpeed(speed);
         tortoise.setSize(tortoiseSize, tortoiseSize);
         tortoise.setImage(getImage());

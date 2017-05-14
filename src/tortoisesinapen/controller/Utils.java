@@ -4,6 +4,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import tortoisesinapen.model.Tortoise;
 
 public class Utils {
@@ -18,6 +19,7 @@ public class Utils {
     private Rectangle movableBounds;
     private int tortoiseSize;
     private List<Tortoise> tortoiseList = new ArrayList<>();
+    private Random random = new Random();
 
     private Utils() {
     }
@@ -36,13 +38,20 @@ public class Utils {
     }
 
     private void setCanvasBounds(Rectangle bounds) {
+        int heightCorrection = (int) bounds.getY();
+        bounds.setLocation(0, 0);
+        bounds.setSize(bounds.width, bounds.height - heightCorrection);
         this.canvasBounds = bounds;
         this.tortoiseSize = (int) (bounds.getHeight() / 10);
-        this.movableBounds = new Rectangle(bounds.width - tortoiseSize, bounds.height - tortoiseSize);
+        this.movableBounds = new Rectangle(bounds.width - tortoiseSize, (int) (bounds.height - tortoiseSize*1.4));
     }
 
     public void addTortoise(Tortoise tortoise){
         this.tortoiseList.add(tortoise);
+    }
+
+    public int getRandomSpeed(){
+        return random.nextInt(2) + 1;
     }
     
     public Rectangle getCanvasBounds() {
@@ -73,8 +82,20 @@ public class Utils {
         return tortoiseList;
     }
 
+    public Rectangle getMovableBounds() {
+        return movableBounds;
+    }
+
     public void initialize() {
         getMaximumWindowBounds();
+    }
+
+    public int getRandomDirectionTimeout() {
+        return random.nextInt(500);
+    }
+
+    public int getRandomSpeedTimeout() {
+        return random.nextInt(500);
     }
     
 }

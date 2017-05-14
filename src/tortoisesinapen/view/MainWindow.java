@@ -16,6 +16,7 @@ public class MainWindow extends JFrame{
     private void initComponents() {
         numTortoises = getNumOfTortoises();
         canvas = new Canvas(numTortoises);
+        canvas.setDoubleBuffered(true);
         add(canvas);
         
         setBounds(Utils.getInstance().getMaximumWindowBounds());
@@ -31,12 +32,16 @@ public class MainWindow extends JFrame{
     }
 
     private int getNumOfTortoises() {
-        String input = JOptionPane.showInputDialog(this, "Enter the number of Tortoises:", "", JOptionPane.QUESTION_MESSAGE);
+        String input = JOptionPane.showInputDialog(this,
+                "Enter the number of Tortoises:\nMaximum is 20",
+                "", JOptionPane.QUESTION_MESSAGE);
         int number = 1;
         try{
             number = Integer.parseInt(input);
         }catch(NumberFormatException e){            
         }
+        number = number < 1 ? 1 : number;
+        number = number > 20 ? 20 : number;
         return number;
     }
     
