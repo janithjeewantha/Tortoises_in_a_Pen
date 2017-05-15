@@ -6,8 +6,6 @@ import tortoisesinapen.model.Tortoise;
 
 public class TortoiseController {
     
-    private static final int T_SIZE = Utils.getInstance().getTortoiseSize();
-    
     public static void move() {
         List<Tortoise> tortoiseList = Utils.getInstance().getTortoiseList();
 
@@ -27,9 +25,19 @@ public class TortoiseController {
             Rectangle nextRect = t.getNextPositionRectangle();
             if(!Utils.getInstance().getCanvasBounds().contains(nextRect)){
                 t.changeDirection();
-            }            
+            }
+            for(Tortoise t_temp : tortoiseList){
+                if(t == t_temp){
+                    continue;
+                }
+                if(t.getNextPositionRectangle().intersects(
+                        t_temp.getNextPositionRectangle())){
+                    t.changeDirection();
+                    break;
+                }
+            }
             t.stepForward();
-        }        
+        }
                 
     }
     
